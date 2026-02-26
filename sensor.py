@@ -15,8 +15,8 @@ class SENSOR:
             self.linkName
         )
 
-        if t == len(self.values) - 1:
-            print(self.values)
+        # if t == len(self.values) - 1:
+        #     print(self.values)
 
     def Save_Values(self):
 

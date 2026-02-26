@@ -2,6 +2,7 @@ import pybullet as p
 import pybullet_data
 import time
 
+
 from world import WORLD
 from robot import ROBOT
 
@@ -26,6 +27,7 @@ class SIMULATION:
             p.stepSimulation()
 
             self.robot.Sense(t)
+            self.robot.Think()
             self.robot.Act(t)
 
             time.sleep(1/2000)
