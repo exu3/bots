@@ -52,3 +52,13 @@ class ROBOT:
 
         self.nn.Update()
         self.nn.Print()
+
+    def Get_Fitness(self):
+        # Get link 0 state
+        stateOfLinkZero = p.getLinkState(self.robotId, 0)
+        # first tuple contains position
+        positionOfLinkZero = stateOfLinkZero[0]
+        xCoordinateOfLinkZero = positionOfLinkZero[0]  # x position
+        # Write to file
+        with open("fitness.txt", "w") as f:
+            f.write(str(xCoordinateOfLinkZero))
