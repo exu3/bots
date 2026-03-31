@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import os
 import pyrosim.pyrosim as pyrosim
@@ -6,10 +7,13 @@ import random
 
 class SOLUTION:
 
-    def __init__(self):
-        # Create 3x2 matrix of random weights in [-1,1]
+    def __init__(self, myID=0):
+        self.myID = myID
         self.weights = np.random.rand(3, 2) * 2 - 1
-        self.fitness = None  # Will be set after evaluation
+        self.fitness = None
+
+    def Set_ID(self, myID):
+        self.myID = myID
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
@@ -28,7 +32,7 @@ class SOLUTION:
         pyrosim.End()
 
     def Create_Brain(self):
-        pyrosim.Start_NeuralNetwork("brain.nndf")
+        pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
         sensor_links = ["Torso", "BackLeg", "FrontLeg"]
         motor_joints = ["Torso_BackLeg", "Torso_FrontLeg"]
 
@@ -46,25 +50,41 @@ class SOLUTION:
                 )
         pyrosim.End()
 
-    def Evaluate(self, directOrGUI="DIRECT"):
-        # Generate robot
+    def Start_Simulation(self, directOrGUI="DIRECT"):
         self.Create_World()
         self.Create_Body()
         self.Create_Brain()
 
-        # Run simulation in specified mode
-        os.system(f"python3 simulate.py {directOrGUI}")
+        brainFile = f"brain{self.myID}.nndf"
 
-        # Read fitness
-        fitnessFile = open("fitness.txt", "r")
-        self.fitness = float(fitnessFile.read())
-        fitnessFile.close()
+        while not os.path.exists(brainFile):
+            time.sleep(0.01)
+
+        time.sleep(0.05)
+
+        cmd = f"python3 simulate.py {directOrGUI} {self.myID} &"
+        os.system(cmd)
+
+    def Wait_For_Simulation_To_End(self):
+        fitnessFile = os.path.abspath(f"fitness{self.myID}.txt")
+
+        time.sleep(0.05)
+
+        while not os.path.exists(fitnessFile):
+            time.sleep(0.01)
+
+        with open(fitnessFile, "r") as f:
+            self.fitness = float(f.read())
+
+        print(f"Solution {self.myID} fitness: {self.fitness:.4f}")
+
+        os.remove(fitnessFile)
+
+    def Evaluate(self, directOrGUI="DIRECT"):
+        self.Start_Simulation(directOrGUI)
+        self.Wait_For_Simulation_To_End()
 
     def Mutate(self):
-        # Pick a random row (sensor neuron)
-        randomRow = random.randint(0, 2)  # 0,1,2
-        # Pick a random column (motor neuron)
-        randomColumn = random.randint(0, 1)  # 0,1
-
-        # Replace that synapse weight with a new random value in [-1,1]
-        self.weights[randomRow, randomColumn] = random.random() * 2 - 1
+        row = random.randint(0, 2)
+        col = random.randint(0, 1)
+        self.weights[row, col] = random.random() * 2 - 1

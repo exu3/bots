@@ -7,7 +7,9 @@ from robot import ROBOT
 
 class SIMULATION:
 
-    def __init__(self, directOrGUI="DIRECT"):
+    def __init__(self, directOrGUI="DIRECT", solutionID=0):
+        self.directOrGUI = directOrGUI
+        self.solutionID = solutionID
         if directOrGUI == "DIRECT":
             self.physicsClient = p.connect(p.DIRECT)
         else:
@@ -17,7 +19,8 @@ class SIMULATION:
         p.setGravity(0, 0, -9.8)
 
         self.world = WORLD()
-        self.robot = ROBOT()
+        self.robot = ROBOT(solutionID=self.solutionID)
+
         self.time_range = 1000
 
     def Run(self):

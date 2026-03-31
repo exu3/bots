@@ -7,3 +7,4 @@ frequency = 2
 phaseOffset = 0
 
 numberOfGenerations = 10
+populationSize = 3

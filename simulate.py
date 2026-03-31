@@ -1,11 +1,10 @@
 import sys
 from simulation import SIMULATION
 
-if len(sys.argv) > 1:
-    directOrGUI = sys.argv[1]
-else:
-    directOrGUI = "DIRECT"
+directOrGUI = sys.argv[1] if len(sys.argv) > 1 else "DIRECT"
 
-simulation = SIMULATION(directOrGUI)
+solutionID = int(sys.argv[2]) if len(sys.argv) > 2 else 0
+
+simulation = SIMULATION(directOrGUI, solutionID)
 simulation.Run()
 simulation.Get_Fitness()
