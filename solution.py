@@ -35,12 +35,22 @@ class SOLUTION:
                            type="revolute", position=[0, -0.5, 1], jointAxis="1 0 0")
         pyrosim.Send_Cube(name="BackLeg", pos=[0, -0.5, 0], size=[0.2, 1, 0.2])
 
+        pyrosim.Send_Joint(name="Torso_LeftLeg", parent="Torso", child="LeftLeg",
+                           type="revolute", position=[-0.5, 0, 1], jointAxis="0 1 0")
+        pyrosim.Send_Cube(name="LeftLeg", pos=[-0.5, 0, 0], size=[1, 0.2, 0.2])
+
+        pyrosim.Send_Joint(name="Torso_RightLeg", parent="Torso", child="RightLeg",
+                           type="revolute", position=[0.5, 0, 1], jointAxis="0 1 0")
+
+        pyrosim.Send_Cube(name="RightLeg", pos=[0.5, 0, 0], size=[1, 0.2, 0.2])
+
         pyrosim.End()
 
     def Create_Brain(self):
         pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
-        sensor_links = ["Torso", "BackLeg", "FrontLeg"]
-        motor_joints = ["Torso_BackLeg", "Torso_FrontLeg"]
+        sensor_links = ["Torso", "BackLeg", "FrontLeg", "LeftLeg", "RightLeg"]
+        motor_joints = ["Torso_BackLeg", "Torso_FrontLeg",
+                        "Torso_LeftLeg", "Torso_RightLeg"]
 
         for i, linkName in enumerate(sensor_links):
             pyrosim.Send_Sensor_Neuron(name=i, linkName=linkName)
