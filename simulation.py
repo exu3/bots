@@ -1,4 +1,5 @@
 import pybullet as p
+import constants as c
 import pybullet_data
 import time
 from world import WORLD
@@ -21,7 +22,7 @@ class SIMULATION:
         self.world = WORLD()
         self.robot = ROBOT(solutionID=self.solutionID)
 
-        self.time_range = 1000
+        self.time_range = c.simulationLength
 
     def Run(self):
         for t in range(self.time_range):
@@ -29,8 +30,9 @@ class SIMULATION:
             self.robot.Sense(t)
             self.robot.Think()
             self.robot.Act(t)
-            # Remove or reduce sleep for faster blind mode
-            # time.sleep(1/2000)
+
+        if self.directOrGUI == "GUI":
+            time.sleep(1/240)
 
     def Get_Fitness(self):
         self.robot.Get_Fitness()
