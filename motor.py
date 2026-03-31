@@ -19,7 +19,7 @@ class MOTOR:
         self.offset = c.phaseOffset
 
         # make one motor half frequency
-        if b"BackLeg" in self.jointName:
+        if "BackLeg" in self.jointName:
             self.frequency = self.frequency / 2
 
         time_range = 1000

@@ -7,17 +7,21 @@ from robot import ROBOT
 
 class SIMULATION:
 
-    def __init__(self, directOrGUI="DIRECT"):
-        if directOrGUI == "DIRECT":
-            self.physicsClient = p.connect(p.DIRECT)
-        else:
-            self.physicsClient = p.connect(p.GUI)
+    def __init__(self, directOrGUI, solutionID):
 
-        p.setAdditionalSearchPath(pybullet_data.getDataPath())
+        if directOrGUI == "DIRECT":
+            p.connect(p.DIRECT)
+        else:
+            p.connect(p.GUI)
+
+        import pybullet_data
+        p.setAdditionalSearchPath(pybullet_data.getDataPath())  # 🔥 REQUIRED
+
         p.setGravity(0, 0, -9.8)
 
         self.world = WORLD()
-        self.robot = ROBOT()
+        self.robot = ROBOT(solutionID)
+
         self.time_range = 1000
 
     def Run(self):

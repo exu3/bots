@@ -6,10 +6,10 @@ import random
 
 class SOLUTION:
 
-    def __init__(self):
-        # Create 3x2 matrix of random weights in [-1,1]
+    def __init__(self, ID):
+        self.myID = ID   # NEW
         self.weights = np.random.rand(3, 2) * 2 - 1
-        self.fitness = None  # Will be set after evaluation
+        self.fitness = None
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
@@ -28,7 +28,7 @@ class SOLUTION:
         pyrosim.End()
 
     def Create_Brain(self):
-        pyrosim.Start_NeuralNetwork("brain.nndf")
+        pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
         sensor_links = ["Torso", "BackLeg", "FrontLeg"]
         motor_joints = ["Torso_BackLeg", "Torso_FrontLeg"]
 
@@ -53,8 +53,7 @@ class SOLUTION:
         self.Create_Brain()
 
         # Run simulation in specified mode
-        os.system(f"python3 simulate.py {directOrGUI}")
-
+        os.system(f"python3 simulate.py {directOrGUI} {self.myID} &")
         # Read fitness
         fitnessFile = open("fitness.txt", "r")
         self.fitness = float(fitnessFile.read())

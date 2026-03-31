@@ -1,8 +1,3 @@
-from hillclimber import HILL_CLIMBER
-
-hc = HILL_CLIMBER()
-hc.parent.Evaluate(directOrGUI="GUI")  # first random robot
-
-hc.Evolve()
-
-hc.Show_Best()  # final evolution
+from parallelHillClimber import PARALLEL_HILL_CLIMBER
+phc = PARALLEL_HILL_CLIMBER()
+phc.Evolve()
