@@ -6,12 +6,12 @@ amplitude = np.pi / 4
 frequency = 2
 phaseOffset = 0
 
-numberOfGenerations = 1
-populationSize = 1
+numberOfGenerations = 10
+populationSize = 10
 
 numSensorNeurons = 9
 numMotorNeurons = 8
 
-motorJointRange = 1.0
+motorJointRange = .5
 
 simulationLength = 3000
