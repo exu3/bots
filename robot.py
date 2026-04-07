@@ -59,6 +59,11 @@ class ROBOT:
         stateOfLinkZero = p.getLinkState(self.robotId, 0)
         xCoordinateOfLinkZero = stateOfLinkZero[0][0]
 
+        # wh    at
+        # basePositionAndOrientation = p.getBasePositionAndOrientation(self.robot)
+        # basePosition = basePositionAndOrientation[0]
+        # xPosition = basePosition[0]
+
         tmpFile = f"tmp{self.solutionID}.txt"
         fitnessFile = f"fitness{self.solutionID}.txt"
 

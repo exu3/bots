@@ -16,9 +16,6 @@ class SENSOR:
             self.linkName
         )
 
-        # if t == len(self.values) - 1:
-        #     print(self.values)
-
     def Save_Values(self):
 
         np.save(f"data/{self.linkName}_sensor_values.npy", self.values)
