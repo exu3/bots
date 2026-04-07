@@ -23,6 +23,81 @@ class SOLUTION:
         pyrosim.End()
 
     def Create_Body(self):
+        # Hexapod
+        pyrosim.Start_URDF("body.urdf")
+
+        pyrosim.Send_Cube(name="Torso", pos=[0, 0, 1], size=[1, 1, 1])
+
+        # Front left leg
+        pyrosim.Send_Joint(name="Torso_FrontLeftLeg", parent="Torso", child="FrontLeftLeg",
+                           type="revolute", position=[0.5, 0.5, 1], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="FrontLeftLeg", pos=[
+                          0, 0.5, 0], size=[0.2, 1.0, 0.2])
+
+        pyrosim.Send_Joint(name="FrontLeftLeg_FrontLeftLowerLeg", parent="FrontLeftLeg", child="FrontLeftLowerLeg",
+                           type="revolute", position=[0, 1.0, 0], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="FrontLeftLowerLeg", pos=[
+                          0, 0, -0.5], size=[0.2, 0.2, 1.0])
+
+        # Front right leg
+        pyrosim.Send_Joint(name="Torso_FrontRightLeg", parent="Torso", child="FrontRightLeg",
+                           type="revolute", position=[0.5, -0.5, 1], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="FrontRightLeg", pos=[
+                          0, -0.5, 0], size=[0.2, 1.0, 0.2])
+
+        pyrosim.Send_Joint(name="FrontRightLeg_FrontRightLowerLeg", parent="FrontRightLeg", child="FrontRightLowerLeg",
+                           type="revolute", position=[0, -1.0, 0], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="FrontRightLowerLeg", pos=[
+                          0, 0, -0.5], size=[0.2, 0.2, 1.0])
+
+        # Middle left leg
+        pyrosim.Send_Joint(name="Torso_MiddleLeftLeg", parent="Torso", child="MiddleLeftLeg",
+                           type="revolute", position=[0, 0.5, 1], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="MiddleLeftLeg", pos=[
+                          0, 0.5, 0], size=[0.2, 1.0, 0.2])
+
+        pyrosim.Send_Joint(name="MiddleLeftLeg_MiddleLeftLowerLeg", parent="MiddleLeftLeg", child="MiddleLeftLowerLeg",
+                           type="revolute", position=[0, 1.0, 0], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="MiddleLeftLowerLeg", pos=[
+                          0, 0, -0.5], size=[0.2, 0.2, 1.0])
+
+        # Middle right leg
+        pyrosim.Send_Joint(name="Torso_MiddleRightLeg", parent="Torso", child="MiddleRightLeg",
+                           type="revolute", position=[0, -0.5, 1], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="MiddleRightLeg", pos=[
+                          0, -0.5, 0], size=[0.2, 1.0, 0.2])
+
+        pyrosim.Send_Joint(name="MiddleRightLeg_MiddleRightLowerLeg", parent="MiddleRightLeg", child="MiddleRightLowerLeg",
+                           type="revolute", position=[0, -1.0, 0], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="MiddleRightLowerLeg", pos=[
+                          0, 0, -0.5], size=[0.2, 0.2, 1.0])
+
+        # Back left leg
+        pyrosim.Send_Joint(name="Torso_BackLeftLeg", parent="Torso", child="BackLeftLeg",
+                           type="revolute", position=[-0.5, 0.5, 1], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="BackLeftLeg", pos=[
+                          0, 0.5, 0], size=[0.2, 1.0, 0.2])
+
+        pyrosim.Send_Joint(name="BackLeftLeg_BackLeftLowerLeg", parent="BackLeftLeg", child="BackLeftLowerLeg",
+                           type="revolute", position=[0, 1.0, 0], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="BackLeftLowerLeg", pos=[
+                          0, 0, -0.5], size=[0.2, 0.2, 1.0])
+
+        # Back right leg
+        pyrosim.Send_Joint(name="Torso_BackRightLeg", parent="Torso", child="BackRightLeg",
+                           type="revolute", position=[-0.5, -0.5, 1], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="BackRightLeg", pos=[
+                          0, -0.5, 0], size=[0.2, 1.0, 0.2])
+
+        pyrosim.Send_Joint(name="BackRightLeg_BackRightLowerLeg", parent="BackRightLeg", child="BackRightLowerLeg",
+                           type="revolute", position=[0, -1.0, 0], jointAxis="1 0 0")
+        pyrosim.Send_Cube(name="BackRightLowerLeg", pos=[
+                          0, 0, -0.5], size=[0.2, 0.2, 1.0])
+
+        pyrosim.End()
+
+    def Create_Body_Wahoo(self):
+        # quadruped
         pyrosim.Start_URDF("body.urdf")
 
         pyrosim.Send_Cube(name="Torso", pos=[0, 0, 1], size=[1, 1, 1])
@@ -67,27 +142,45 @@ class SOLUTION:
 
     def Create_Brain(self):
         pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
+        # sensor_links = [
+        #     "Torso",
+        #     "FrontLeg",
+        #     "FrontLowerLeg",
+        #     "BackLeg",
+        #     "BackLowerLeg",
+        #     "LeftLeg",
+        #     "LeftLowerLeg",
+        #     "RightLeg",
+        #     "RightLowerLeg"
+        # ]
+
+        # motor_joints = [
+        #     "Torso_FrontLeg",
+        #     "FrontLeg_FrontLowerLeg",
+        #     "Torso_BackLeg",
+        #     "BackLeg_BackLowerLeg",
+        #     "Torso_LeftLeg",
+        #     "LeftLeg_LeftLowerLeg",
+        #     "Torso_RightLeg",
+        #     "RightLeg_RightLowerLeg"
+        # ]
         sensor_links = [
             "Torso",
-            "FrontLeg",
-            "FrontLowerLeg",
-            "BackLeg",
-            "BackLowerLeg",
-            "LeftLeg",
-            "LeftLowerLeg",
-            "RightLeg",
-            "RightLowerLeg"
+            "FrontLeftLeg", "FrontLeftLowerLeg",
+            "FrontRightLeg", "FrontRightLowerLeg",
+            "MiddleLeftLeg", "MiddleLeftLowerLeg",
+            "MiddleRightLeg", "MiddleRightLowerLeg",
+            "BackLeftLeg", "BackLeftLowerLeg",
+            "BackRightLeg", "BackRightLowerLeg"
         ]
 
         motor_joints = [
-            "Torso_FrontLeg",
-            "FrontLeg_FrontLowerLeg",
-            "Torso_BackLeg",
-            "BackLeg_BackLowerLeg",
-            "Torso_LeftLeg",
-            "LeftLeg_LeftLowerLeg",
-            "Torso_RightLeg",
-            "RightLeg_RightLowerLeg"
+            "Torso_FrontLeftLeg", "FrontLeftLeg_FrontLeftLowerLeg",
+            "Torso_FrontRightLeg", "FrontRightLeg_FrontRightLowerLeg",
+            "Torso_MiddleLeftLeg", "MiddleLeftLeg_MiddleLeftLowerLeg",
+            "Torso_MiddleRightLeg", "MiddleRightLeg_MiddleRightLowerLeg",
+            "Torso_BackLeftLeg", "BackLeftLeg_BackLeftLowerLeg",
+            "Torso_BackRightLeg", "BackRightLeg_BackRightLowerLeg"
         ]
 
         for i, linkName in enumerate(sensor_links):
