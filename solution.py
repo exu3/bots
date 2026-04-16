@@ -211,7 +211,7 @@ class SOLUTION:
 
         time.sleep(0.05)
 
-        cmd = f"python3 simulate.py {directOrGUI} {self.myID} &"
+        cmd = f"python3 simulate.py {directOrGUI} {self.myID}"  # &
         os.system(cmd)
 
     def Wait_For_Simulation_To_End(self):
