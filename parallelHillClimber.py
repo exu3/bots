@@ -12,6 +12,7 @@ class PARALLEL_HILL_CLIMBER:
 
         self.parents = {}
         self.nextAvailableID = 0
+        self.fitnessHistory = []
 
         for i in range(c.populationSize):
             self.parents[i] = SOLUTION(self.nextAvailableID)
@@ -19,9 +20,13 @@ class PARALLEL_HILL_CLIMBER:
 
     def Evolve(self):
         self.Evaluate(self.parents, "DIRECT")
+        self.Record_Best_Fitness()
 
         for currentGeneration in range(c.numberOfGenerations):
             self.Evolve_For_One_Generation()
+            self.Record_Best_Fitness()
+
+        self.Save_Fitness_History()
 
     def Evolve_For_One_Generation(self):
         self.Spawn()
@@ -68,3 +73,13 @@ class PARALLEL_HILL_CLIMBER:
 
         for key in solutions:
             solutions[key].Wait_For_Simulation_To_End()
+
+    def Record_Best_Fitness(self):
+        bestFitness = min(self.parents[key].fitness for key in self.parents)
+        self.fitnessHistory.append(bestFitness)
+
+    def Save_Fitness_History(self):
+        filename = f"fitness_history_{c.robotType}.txt"
+        with open(filename, "w") as f:
+            for generation, fitness in enumerate(self.fitnessHistory):
+                f.write(f"{generation} {fitness}\n")

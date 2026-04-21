@@ -6,8 +6,8 @@ amplitude = np.pi / 4
 frequency = 2
 phaseOffset = 0
 
-numberOfGenerations = 10
-populationSize = 10
+numberOfGenerations = 5
+populationSize = 5
 
 # for quadruped
 # numSensorNeurons = 9
@@ -21,4 +21,4 @@ motorJointRange = .3
 
 simulationLength = 3000
 
-robotType = "hexapod"
+robotType = "quadruped"  # or hexapod
