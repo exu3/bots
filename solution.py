@@ -10,12 +10,52 @@ class SOLUTION:
 
     def __init__(self, myID=0):
         self.myID = myID
+        sensor_links = self.Get_Sensor_Links()
+        motor_joints = self.Get_Motor_Joints()
         self.weights = np.random.rand(
-            c.numSensorNeurons, c.numMotorNeurons) * 2 - 1
+            len(sensor_links), len(motor_joints)) * 2 - 1
         self.fitness = None
 
     def Set_ID(self, myID):
         self.myID = myID
+
+    def Get_Sensor_Links(self):
+        if c.robotType == "quadruped":
+            return [
+                "Torso",
+                "FrontLeg", "FrontLowerLeg",
+                "BackLeg", "BackLowerLeg",
+                "LeftLeg", "LeftLowerLeg",
+                "RightLeg", "RightLowerLeg"
+            ]
+        elif c.robotType == "hexapod":
+            return [
+                "Torso",
+                "FrontLeftLeg", "FrontLeftLowerLeg",
+                "FrontRightLeg", "FrontRightLowerLeg",
+                "MiddleLeftLeg", "MiddleLeftLowerLeg",
+                "MiddleRightLeg", "MiddleRightLowerLeg",
+                "BackLeftLeg", "BackLeftLowerLeg",
+                "BackRightLeg", "BackRightLowerLeg"
+            ]
+
+    def Get_Motor_Joints(self):
+        if c.robotType == "quadruped":
+            return [
+                "Torso_FrontLeg", "FrontLeg_FrontLowerLeg",
+                "Torso_BackLeg", "BackLeg_BackLowerLeg",
+                "Torso_LeftLeg", "LeftLeg_LeftLowerLeg",
+                "Torso_RightLeg", "RightLeg_RightLowerLeg"
+            ]
+        elif c.robotType == "hexapod":
+            return [
+                "Torso_FrontLeftLeg", "FrontLeftLeg_FrontLeftLowerLeg",
+                "Torso_FrontRightLeg", "FrontRightLeg_FrontRightLowerLeg",
+                "Torso_MiddleLeftLeg", "MiddleLeftLeg_MiddleLeftLowerLeg",
+                "Torso_MiddleRightLeg", "MiddleRightLeg_MiddleRightLowerLeg",
+                "Torso_BackLeftLeg", "BackLeftLeg_BackLeftLowerLeg",
+                "Torso_BackRightLeg", "BackRightLeg_BackRightLowerLeg"
+            ]
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
@@ -23,6 +63,12 @@ class SOLUTION:
         pyrosim.End()
 
     def Create_Body(self):
+        if c.robotType == "quadruped":
+            self.Create_Quadruped_Body()
+        elif c.robotType == "hexapod":
+            self.Create_Hexapod_Body()
+
+    def Create_Hexapod_Body(self):
         # Hexapod
         pyrosim.Start_URDF("body.urdf")
 
@@ -96,7 +142,7 @@ class SOLUTION:
 
         pyrosim.End()
 
-    def Create_Body_Wahoo(self):
+    def Create_Quadruped_Body(self):
         # quadruped
         pyrosim.Start_URDF("body.urdf")
 
@@ -142,61 +188,25 @@ class SOLUTION:
 
     def Create_Brain(self):
         pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
-        # sensor_links = [
-        #     "Torso",
-        #     "FrontLeg",
-        #     "FrontLowerLeg",
-        #     "BackLeg",
-        #     "BackLowerLeg",
-        #     "LeftLeg",
-        #     "LeftLowerLeg",
-        #     "RightLeg",
-        #     "RightLowerLeg"
-        # ]
 
-        # motor_joints = [
-        #     "Torso_FrontLeg",
-        #     "FrontLeg_FrontLowerLeg",
-        #     "Torso_BackLeg",
-        #     "BackLeg_BackLowerLeg",
-        #     "Torso_LeftLeg",
-        #     "LeftLeg_LeftLowerLeg",
-        #     "Torso_RightLeg",
-        #     "RightLeg_RightLowerLeg"
-        # ]
-        sensor_links = [
-            "Torso",
-            "FrontLeftLeg", "FrontLeftLowerLeg",
-            "FrontRightLeg", "FrontRightLowerLeg",
-            "MiddleLeftLeg", "MiddleLeftLowerLeg",
-            "MiddleRightLeg", "MiddleRightLowerLeg",
-            "BackLeftLeg", "BackLeftLowerLeg",
-            "BackRightLeg", "BackRightLowerLeg"
-        ]
-
-        motor_joints = [
-            "Torso_FrontLeftLeg", "FrontLeftLeg_FrontLeftLowerLeg",
-            "Torso_FrontRightLeg", "FrontRightLeg_FrontRightLowerLeg",
-            "Torso_MiddleLeftLeg", "MiddleLeftLeg_MiddleLeftLowerLeg",
-            "Torso_MiddleRightLeg", "MiddleRightLeg_MiddleRightLowerLeg",
-            "Torso_BackLeftLeg", "BackLeftLeg_BackLeftLowerLeg",
-            "Torso_BackRightLeg", "BackRightLeg_BackRightLowerLeg"
-        ]
+        sensor_links = self.Get_Sensor_Links()
+        motor_joints = self.Get_Motor_Joints()
 
         for i, linkName in enumerate(sensor_links):
             pyrosim.Send_Sensor_Neuron(name=i, linkName=linkName)
 
         for j, jointName in enumerate(motor_joints):
             pyrosim.Send_Motor_Neuron(
-                name=j + c.numSensorNeurons, jointName=jointName)
+                name=j + len(sensor_links), jointName=jointName)
 
-        for currentRow in range(c.numSensorNeurons):
-            for currentColumn in range(c.numMotorNeurons):
+        for currentRow in range(len(sensor_links)):
+            for currentColumn in range(len(motor_joints)):
                 pyrosim.Send_Synapse(
                     sourceNeuronName=currentRow,
-                    targetNeuronName=currentColumn + c.numSensorNeurons,
+                    targetNeuronName=currentColumn + len(sensor_links),
                     weight=self.weights[currentRow][currentColumn]
                 )
+
         pyrosim.End()
 
     def Start_Simulation(self, directOrGUI="DIRECT"):
@@ -211,7 +221,7 @@ class SOLUTION:
 
         time.sleep(0.05)
 
-        cmd = f"python3 simulate.py {directOrGUI} {self.myID}"  # &
+        cmd = f"python3 simulate.py {directOrGUI} {self.myID} &"  # &
         os.system(cmd)
 
     def Wait_For_Simulation_To_End(self):
@@ -234,6 +244,6 @@ class SOLUTION:
         self.Wait_For_Simulation_To_End()
 
     def Mutate(self):
-        row = random.randint(0, c.numSensorNeurons - 1)
-        col = random.randint(0, c.numMotorNeurons - 1)
+        row = random.randint(0, self.weights.shape[0] - 1)
+        col = random.randint(0, self.weights.shape[1] - 1)
         self.weights[row, col] = random.random() * 2 - 1

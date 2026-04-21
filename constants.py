@@ -9,13 +9,16 @@ phaseOffset = 0
 numberOfGenerations = 10
 populationSize = 10
 
+# for quadruped
 # numSensorNeurons = 9
 # numMotorNeurons = 8
 
 # for da hexapod
-numSensorNeurons = 13
-numMotorNeurons = 12
+# numSensorNeurons = 13
+# numMotorNeurons = 12
 
 motorJointRange = .3
 
 simulationLength = 3000
+
+robotType = "hexapod"
