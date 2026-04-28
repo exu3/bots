@@ -6,7 +6,7 @@ amplitude = np.pi / 4
 frequency = 2
 phaseOffset = 0
 
-numberOfGenerations = 5
+numberOfGenerations = 30
 populationSize = 5
 
 # for quadruped

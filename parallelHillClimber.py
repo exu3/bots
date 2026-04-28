@@ -79,7 +79,7 @@ class PARALLEL_HILL_CLIMBER:
         self.fitnessHistory.append(bestFitness)
 
     def Save_Fitness_History(self):
-        filename = f"fitness_history_{c.robotType}.txt"
+        filename = f"ffitness_history_{c.robotType}.txt"
         with open(filename, "w") as f:
             for generation, fitness in enumerate(self.fitnessHistory):
                 f.write(f"{generation} {fitness}\n")
