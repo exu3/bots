@@ -21,4 +21,4 @@ motorJointRange = .3
 
 simulationLength = 3000
 
-robotType = "quadruped"  # or hexapod
+robotType = "hexapod"  # or hexapod
